@@ -17,9 +17,10 @@
     description: 'foobar'
   };
 
+  /*
   todo.title = 'Hello'; // Error: cannot reassign a readonly property
   todo.description = 'barFoo'; // Error: cannot reassign a readonly property
-
+  */
 // ------------------------------------ answer ---------------------------------
 
   type MyReadonly<T> = {
