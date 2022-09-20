@@ -1,4 +1,4 @@
-type IAwaited<T> = T extends Promise<infer P> ? P : T;
+type IAwaited<T> = T extends Promise<infer P> ? IAwaited<P> : T;
 
 declare const PromiseAll: <T extends any[]>(promises: readonly [...T]) => Promise<{ [K in keyof T]: IAwaited<T[K]> }>;
 
