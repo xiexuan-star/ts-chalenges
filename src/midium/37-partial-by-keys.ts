@@ -17,5 +17,6 @@
     [K in keyof T]: T[K]
   }
 
+  // TODO can't pass all of test
   type PartialByKeys<T extends Object, K extends string | number | symbol = keyof T> = Merge<{ [KEY in keyof T as KEY extends K ? K : never]?: T[KEY] } & { [KEY in keyof T as KEY extends K ? never : KEY]: T[KEY] }>
 }
