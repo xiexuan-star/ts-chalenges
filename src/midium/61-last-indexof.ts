@@ -10,9 +10,5 @@
     (<T>() => T extends A ? 1 : 2) extends (<T>() => T extends B ? 1 : 2)
       ? true : false;
 
-  type NumberToArray<T extends number, Res extends any[] = []> = Res['length'] extends T ? Res : NumberToArray<T, [...Res, any]>;
-
-  type Shift<T extends readonly any[]> = T extends [infer First, ...infer Rest] ? Rest : []
-
-  type LastIndexOf<T extends readonly unknown[], V, U extends readonly unknown[] = Shift<NumberToArray<T['length']>>> = T extends [...infer Rest, infer Last] ? IsEqual<Last, V> extends true ? U['length'] : LastIndexOf<Rest, V, Shift<U>> : -1
+  type LastIndexOf<T extends readonly unknown[], V> = T extends [...infer Rest, infer Last] ? IsEqual<Last, V> extends true ? Rest['length'] : LastIndexOf<Rest, V> : -1
 }
