@@ -12,5 +12,6 @@
 
   type AllCombinations<T extends string> = Combinations<StringToUnion<T>>
 
+  // @ts-ignore
   declare const foo: AllCombinations_ABC;
 }

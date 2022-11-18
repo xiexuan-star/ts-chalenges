@@ -7,7 +7,7 @@
   type Res3 = Join<['o'], 'u'>; // expected to be 'o'
 
   type Join<T extends readonly string[], Split extends string | number> =
-    T extends [infer First, ...infer Rest]
-      ? `${ First extends string ? First : never }${ Rest extends [] ? '' : Split }${ Join<Rest extends string[] ? Rest : never, Split> }`
+    T extends [infer First extends string, ...infer Rest extends string[]]
+      ? `${ First }${ Rest extends [] ? '' : Split }${ Join<Rest, Split> }`
       : ''
 }
