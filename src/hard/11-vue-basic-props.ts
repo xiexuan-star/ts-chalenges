@@ -1,45 +1,21 @@
 {
-  // This challenge continues from 6 - Simple Vue, you should finish that one first, and modify your code based on it to start this challenge.
-
-  // In addition to the Simple Vue, we are now having a new props field in the options. This is a simplified version of Vue's props option. Here are some of the rules.
-
-  // props is an object containing each field as the key of the real props injected into this. The injected props will be accessible in all the context including data, computed, and methods.
-
-  // A prop will be defined either by a constructor or an object with a type field containing constructor(s).
-
-  // For example
-
-  // props: {
-  //   foo: Boolean
-  // }
-// or
-//   props: {
-//     foo: { type: Boolean }
-//   }
-//   should be inferred to type Props = { foo: boolean }.
-
-  // When passing multiple constructors, the type should be inferred to a union.
-
-  // props: {
-  // foo: { type: [Boolean, Number, String] }
-// }
-// -->
-//   type Props = { foo: boolean | number | string }
-  // When an empty object is passed, the key should be inferred to any.
-
-  // For more specified cases, check out the Test Cases section.
-
-  // required, default, and array props in Vue are not considered in this challenge.
-  class ClassA {}
+  // Implement a simpiled version of a Vue-like typing support.
+  //
+  // By providing a function name SimpleVue (similar to Vue.extend or defineComponent), it should properly infer the this type inside computed and methods.
+  //
+  // In this challenge, we assume that SimpleVue take an Object with data, computed and methods fields as it's only argument,
+  //
+  // data is a simple function that returns an object that exposes the context this, but you won't be accessible to other computed values or methods.
+  //
+  // computed is an Object of functions that take the context as this, doing some calculation and returns the result. The computed results should be exposed to the context as the plain return values instead of functions.
+  //
+  // methods is an Object of functions that take the context as this as well. Methods can access the fields exposed by data, computed as well as other methods. The different between computed is that methods exposed as functions as-is.
+  //
+  // The type of SimpleVue's return value can be arbitrary.
 
   const instance = SimpleVue({
     props: {
-      propA: {},
-      propB: { type: String },
-      propC: { type: Boolean },
-      propD: { type: ClassA },
-      propE: { type: [String, Number] },
-      propF: RegExp,
+      foo: { type: Number }
     },
     data() {
       // @ts-expect-error
@@ -48,6 +24,8 @@
       this.getRandom();
       // @ts-expect-error
       this.data();
+
+      this.foo;
 
       return {
         firstname: 'Type',
@@ -80,24 +58,17 @@
     [K in keyof C]: C[K] extends (...args: any[]) => infer Return ? Return : never
   }
 
-  type PropConstructor<T> = { new(...args: any[]): T & {} } | { (): T };
-
-  type PropType<T> = PropConstructor<T> | PropConstructor<T>[];
-
-  type Prop<T> = PropType<T> | { type?: PropType<T> }
-
-  type InferProp<T> = T extends Prop<infer P> ? unknown extends P ? any : T : any
-
   type PropsType<P> = {
-    readonly [K in keyof P]: InferProp<P[K]>
+    [K in keyof P]: P[K] extends { type: infer Type } ?
+      Type extends ((new (...args: any[]) => infer Instance & object) | (() => infer Instance)) ? Instance : never
+      : never
   }
 
   type SimpleVueType<Props, Data, Computed, Methods> =
     {
       props?: Props
       data?(this: PropsType<Props>): Data,
-      computed?: Computed
-      methods?: Methods
+      computed?: Computed & ThisType<PropsType<Props> & Data & ComputedType<Computed>>
+      methods?: Methods & ThisType<PropsType<Props> & Data & Methods & ComputedType<Computed>>
     }
-    & ThisType<PropsType<Props> & Data & Methods & ComputedType<Computed>>
 }
