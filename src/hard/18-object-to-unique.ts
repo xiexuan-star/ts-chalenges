@@ -4,7 +4,7 @@
 
 // The original type and the resulting unique type must be mutually assignable, but not identical.
 
-// For example,
+// For example
 import type { Equal, IsFalse, IsTrue } from '@type-challenges/utils';
 
 type Quz = { quz: 4 }
