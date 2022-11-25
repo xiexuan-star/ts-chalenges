@@ -64,7 +64,10 @@ type cases = [
   Expect<Equal<ExtractValuesOfTuple<UnionToTuple<'a' | 'b' | 'c' | 1 | 2 | 'd' | 'e' | 'f' | 'g'>>, 'f' | 'e' | 1 | 2 | 'g' | 'c' | 'd' | 'a' | 'b'>>,
 ]
 
+type UnionToIntersection2<T> = (T extends T ? (p: T) => any : never) extends (P: infer R) => any ? R : never
 
+
+type UnionToTuple2<T, Result extends unknown[] = []> = (UnionToIntersection2<T extends any ? () => T : never>) extends () => infer R ? UnionToTuple2<Exclude<T, R>, [R, ...Result]> : Result;
 /* _____________ Further Steps _____________ */
 /*
   > Share your solutions: https://tsch.js.org/730/answer
